@@ -18,7 +18,24 @@ class Direction {
   }
 
   turnLeft() {
-    this.heading = (this.heading + 1) % 4;
+    if (!(this.heading === 0)) {
+      this.heading = 2;
+    }
+  }
+  turnUp() {
+    if (!(this.heading === 3)) {
+      this.heading = 1;
+    }
+  }
+  turnDown() {
+    if (!(this.heading === 1)) {
+      this.heading = 3;
+    }
+  }
+  turnRight() {
+    if (!(this.heading === 2)) {
+      this.heading = 0;
+    }
   }
 }
 
@@ -40,6 +57,18 @@ class Snake {
 
   turnLeft() {
     this.direction.turnLeft();
+  }
+
+  turnRight() {
+    this.direction.turnRight();
+  }
+
+  turnUp() {
+    this.direction.turnUp();
+  }
+
+  turnDown() {
+    this.direction.turnDown();
   }
 
   move() {
@@ -93,9 +122,16 @@ const drawSnake = function(snake) {
 };
 
 const handleKeyPress = snake => {
-  snake.turnLeft();
-};
+  const keyLookup = {
+    ArrowRight: () => snake.turnRight(),
+    ArrowLeft: () => snake.turnLeft(),
+    ArrowUp: () => snake.turnUp(),
+    ArrowDown: () => snake.turnDown()
+  };
 
+  const heading = keyLookup[event.key];
+  heading();
+};
 const moveAndDrawSnake = function(snake) {
   snake.move();
   eraseTail(snake);
@@ -116,11 +152,11 @@ const main = function() {
     new Direction(EAST),
     "snake"
   );
-  attachEventListeners(snake);
   createGrids();
   drawSnake(snake);
+  attachEventListeners(snake);
 
   setInterval(() => {
     moveAndDrawSnake(snake);
-  }, 200);
+  }, 400);
 };

@@ -16,6 +16,7 @@
 --DONE-- * Change color of ghost snake
 
 --DONE-- * removed ghost snake
+--DONE-- * make snake movable according to arrow keys
 
 
 * Generate food periodically
