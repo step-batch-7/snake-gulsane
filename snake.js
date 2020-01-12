@@ -17,25 +17,12 @@ class Direction {
     return this.deltas[this.heading];
   }
 
-  turnLeft() {
-    if (!(this.heading === 0)) {
-      this.heading = 2;
-    }
-  }
-  turnUp() {
-    if (!(this.heading === 3)) {
-      this.heading = 1;
-    }
-  }
-  turnDown() {
-    if (!(this.heading === 1)) {
-      this.heading = 3;
-    }
-  }
   turnRight() {
-    if (!(this.heading === 2)) {
-      this.heading = 0;
-    }
+    this.heading = (this.heading + 3) % 4;
+  }
+
+  turnLeft() {
+    this.heading = (this.heading + 1) % 4;
   }
 }
 
@@ -55,22 +42,6 @@ class Snake {
     return this.type;
   }
 
-  turnLeft() {
-    this.direction.turnLeft();
-  }
-
-  turnRight() {
-    this.direction.turnRight();
-  }
-
-  turnUp() {
-    this.direction.turnUp();
-  }
-
-  turnDown() {
-    this.direction.turnDown();
-  }
-
   move() {
     const [headX, headY] = this.positions[this.positions.length - 1];
     this.previousTail = this.positions.shift();
@@ -78,6 +49,31 @@ class Snake {
     const [deltaX, deltaY] = this.direction.delta;
 
     this.positions.push([headX + deltaX, headY + deltaY]);
+  }
+
+  turnRight() {
+    this.direction.turnRight();
+  }
+  turnLeft() {
+    this.direction.turnLeft();
+  }
+}
+
+class Food {
+  constructor(colId, rowId) {
+    this.colId = colId;
+    this.rowId = rowId;
+  }
+
+  get position() {
+    return [this.colId, this.rowId];
+  }
+}
+
+class Game {
+  constructor(snake, food) {
+    this.snake = snake;
+    this.food = food;
   }
 }
 
@@ -123,14 +119,18 @@ const drawSnake = function(snake) {
 
 const handleKeyPress = snake => {
   const keyLookup = {
-    ArrowRight: () => snake.turnRight(),
-    ArrowLeft: () => snake.turnLeft(),
-    ArrowUp: () => snake.turnUp(),
-    ArrowDown: () => snake.turnDown()
+    ArrowRight: EAST,
+    ArrowLeft: WEST,
+    ArrowUp: NORTH,
+    ArrowDown: SOUTH
   };
 
-  const heading = keyLookup[event.key];
-  heading();
+  if (snake.direction.heading === (keyLookup[event.key] + 3) % 4) {
+    snake.turnLeft();
+  }
+  if (snake.direction.heading === (keyLookup[event.key] + 1) % 4) {
+    snake.turnRight();
+  }
 };
 const moveAndDrawSnake = function(snake) {
   snake.move();
@@ -158,5 +158,5 @@ const main = function() {
 
   setInterval(() => {
     moveAndDrawSnake(snake);
-  }, 400);
+  }, 200);
 };
