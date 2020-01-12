@@ -75,7 +75,32 @@ class Game {
     this.snake = snake;
     this.food = food;
   }
+
+  getSnakeStatus() {
+    return {
+      location: this.snake.location,
+      species: this.snake.species,
+      previousTail: this.snake.previousTail
+    };
+  }
+
+  getFoodStatus() {
+    return { position: this.food.position };
+  }
+
+  move() {
+    this.snake.move();
+  }
 }
+
+const inItSnake = () => {
+  const snakePosition = [
+    [40, 25],
+    [41, 25],
+    [42, 25]
+  ];
+  return new Snake(snakePosition, new Direction(EAST), "snake");
+};
 
 const NUM_OF_COLS = 100;
 const NUM_OF_ROWS = 60;
@@ -117,6 +142,10 @@ const drawSnake = function(snake) {
   });
 };
 
+const moveAndDrawSnake = function(snake) {
+  eraseTail(snake);
+  drawSnake(snake);
+};
 const handleKeyPress = snake => {
   const keyLookup = {
     ArrowRight: EAST,
@@ -132,31 +161,37 @@ const handleKeyPress = snake => {
     snake.turnRight();
   }
 };
-const moveAndDrawSnake = function(snake) {
-  snake.move();
-  eraseTail(snake);
-  drawSnake(snake);
-};
 
 const attachEventListeners = snake => {
   document.body.onkeydown = handleKeyPress.bind(null, snake);
 };
 
-const main = function() {
-  const snake = new Snake(
-    [
-      [40, 25],
-      [41, 25],
-      [42, 25]
-    ],
-    new Direction(EAST),
-    "snake"
-  );
-  createGrids();
-  drawSnake(snake);
-  attachEventListeners(snake);
+const drawFood = food => {
+  const [rowId, colId] = food.position;
+  const cell = getCell(rowId, colId);
+  cell.classList.add("food");
+};
 
+const updateGame = game => {
+  const snake = game.getSnakeStatus();
+  const food = game.getFoodStatus();
+  moveAndDrawSnake(snake);
+  drawFood(food);
+  game.move();
+};
+
+const setGame = game => {
+  attachEventListeners(game.snake);
+  createGrids();
+  updateGame(game);
+};
+
+const main = function() {
+  const snake = inItSnake();
+  const food = new Food(5, 5);
+  const game = new Game(snake, food);
+  setGame(game);
   setInterval(() => {
-    moveAndDrawSnake(snake);
+    updateGame(game);
   }, 200);
 };
