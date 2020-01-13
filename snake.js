@@ -46,6 +46,16 @@ class Snake {
     return this.direction.heading;
   }
 
+  get head() {
+    return this.positions[this.positions.length - 1].slice();
+  }
+
+  hasEatenFood(foodLocation) {
+    const [headX, headY] = this.head;
+    const [foodX, foodY] = foodLocation;
+    return headX === foodX && headY === foodY;
+  }
+
   growBy(length) {
     for (let i = 0; i <= length; i++) {
       const [headX, headY] = this.positions[this.positions.length - 1];
@@ -107,9 +117,7 @@ class Game {
   }
 
   update() {
-    const snakeHead = this.snake.location[this.snake.location.length - 1];
-    const hasFoodEaten = areCellEqual(snakeHead, this.food.position);
-    if (hasFoodEaten) {
+    if (this.snake.hasEatenFood(this.food.position)) {
       this.food = inItFood();
       this.snake.growBy(1);
     }
