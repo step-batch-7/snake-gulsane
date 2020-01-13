@@ -88,6 +88,18 @@ class Game {
     return { position: this.food.position };
   }
 
+  turnSnake(directionLookup) {
+    const snakeDirection = this.snake.direction.heading;
+
+    if (directionLookup[event.key] === (snakeDirection + 1) % 4) {
+      this.snake.turnLeft();
+    }
+
+    if (directionLookup[event.key] === (snakeDirection + 3) % 4) {
+      this.snake.turnRight();
+    }
+  }
+
   move() {
     this.snake.move();
   }
@@ -146,24 +158,19 @@ const moveAndDrawSnake = function(snake) {
   eraseTail(snake);
   drawSnake(snake);
 };
-const handleKeyPress = snake => {
+
+const handleKeyPress = game => {
   const keyLookup = {
     ArrowRight: EAST,
     ArrowLeft: WEST,
     ArrowUp: NORTH,
     ArrowDown: SOUTH
   };
-
-  if (snake.direction.heading === (keyLookup[event.key] + 3) % 4) {
-    snake.turnLeft();
-  }
-  if (snake.direction.heading === (keyLookup[event.key] + 1) % 4) {
-    snake.turnRight();
-  }
+  game.turnSnake(keyLookup);
 };
 
-const attachEventListeners = snake => {
-  document.body.onkeydown = handleKeyPress.bind(null, snake);
+const attachEventListeners = game => {
+  document.body.onkeydown = handleKeyPress.bind(null, game);
 };
 
 const drawFood = food => {
@@ -181,7 +188,7 @@ const updateGame = game => {
 };
 
 const setGame = game => {
-  attachEventListeners(game.snake);
+  attachEventListeners(game);
   createGrids();
   updateGame(game);
 };
