@@ -42,6 +42,10 @@ class Snake {
     return this.type;
   }
 
+  get headPosition() {
+    return this.direction.heading;
+  }
+
   move() {
     const [headX, headY] = this.positions[this.positions.length - 1];
     this.previousTail = this.positions.shift();
@@ -89,13 +93,12 @@ class Game {
   }
 
   turnSnake(directionLookup) {
-    const snakeDirection = this.snake.direction.heading;
-
-    if (directionLookup[event.key] === (snakeDirection + 1) % 4) {
+    const headPosition = this.snake.headPosition;
+    if (directionLookup[event.key] === (headPosition + 1) % 4) {
       this.snake.turnLeft();
     }
 
-    if (directionLookup[event.key] === (snakeDirection + 3) % 4) {
+    if (directionLookup[event.key] === (headPosition + 3) % 4) {
       this.snake.turnRight();
     }
   }
