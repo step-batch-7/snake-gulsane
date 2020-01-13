@@ -26,6 +26,12 @@ class Direction {
   }
 }
 
+const areCellsEqual = (cell1, cell2) => {
+  const [cell1RowId, Cell1ColId] = cell1;
+  const [cell2RowId, cell2ColId] = cell2;
+  return cell1RowId === cell2RowId && Cell1ColId === cell2ColId;
+};
+
 class Snake {
   constructor(positions, direction, type) {
     this.positions = positions.slice();
@@ -54,6 +60,12 @@ class Snake {
     const [headX, headY] = this.head;
     const [foodX, foodY] = foodLocation;
     return headX === foodX && headY === foodY;
+  }
+
+  hasTouchedItself() {
+    const body = this.location.slice(0, -1);
+    const snakeHead = this.head;
+    return body.some(part => areCellsEqual(part, snakeHead));
   }
 
   growBy(length) {
@@ -125,6 +137,10 @@ class Game {
       this.snake.growBy(1);
       this.increaseScoreBy(5);
     }
+  }
+
+  hasGameOver() {
+    return this.snake.hasTouchedItself();
   }
 
   turnSnake(directionLookup) {
@@ -219,7 +235,11 @@ const attachEventListeners = game => {
   document.body.onkeydown = handleKeyPress.bind(null, game);
 };
 
-const updateGame = game => {
+const updateGame = (game, gameLoop) => {
+  if (game.hasGameOver()) {
+    clearInterval(gameLoop);
+    alert("Game is Over");
+  }
   eraseFood(game.getFoodStatus());
   drawScore(game.getGameScore);
   game.update();
@@ -238,7 +258,8 @@ const inItSnake = () => {
   const snakePosition = [
     [40, 25],
     [41, 25],
-    [42, 25]
+    [42, 25],
+    [43, 25]
   ];
   return new Snake(snakePosition, new Direction(EAST), "snake");
 };
@@ -254,7 +275,7 @@ const main = function() {
   const food = inItFood();
   const game = new Game(snake, food);
   setGame(game);
-  setInterval(() => {
-    updateGame(game);
+  const gameLoop = setInterval(() => {
+    updateGame(game, gameLoop);
   }, 100);
 };
