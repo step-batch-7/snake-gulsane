@@ -58,14 +58,14 @@ class Snake {
 
   growBy(length) {
     for (let i = 0; i <= length; i++) {
-      const [headX, headY] = this.positions[this.positions.length - 1];
+      const [headX, headY] = this.head;
       const [deltaX, deltaY] = this.direction.delta;
       this.positions.push([headX + deltaX, headY + deltaY]);
     }
   }
 
   move() {
-    const [headX, headY] = this.positions[this.positions.length - 1];
+    const [headX, headY] = this.head;
     this.previousTail = this.positions.shift();
 
     const [deltaX, deltaY] = this.direction.delta;
@@ -109,6 +109,10 @@ class Game {
 
   getFoodStatus() {
     return { position: this.food.position };
+  }
+
+  get getGameScore() {
+    return this.score;
   }
 
   increaseScoreBy(points) {
@@ -196,6 +200,11 @@ const moveAndDrawSnake = function(snake) {
   drawSnake(snake);
 };
 
+const drawScore = score => {
+  const scoreId = document.getElementById("score");
+  scoreId.innerText = `Score: ${score}`;
+};
+
 const handleKeyPress = game => {
   const keyLookup = {
     ArrowRight: EAST,
@@ -212,6 +221,7 @@ const attachEventListeners = game => {
 
 const updateGame = game => {
   eraseFood(game.getFoodStatus());
+  drawScore(game.getGameScore);
   game.update();
   moveAndDrawSnake(game.getSnakeStatus());
   drawFood(game.getFoodStatus());
