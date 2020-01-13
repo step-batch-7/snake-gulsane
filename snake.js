@@ -92,16 +92,11 @@ class Food {
   }
 }
 
-const areCellEqual = (cell1, cell2) => {
-  const [cell1RowId, Cell1ColId] = cell1;
-  const [cell2RowId, cell2ColId] = cell2;
-  return cell1RowId === cell2RowId && Cell1ColId === cell2ColId;
-};
-
 class Game {
   constructor(snake, food) {
     this.snake = snake;
     this.food = food;
+    this.score = 0;
   }
 
   getSnakeStatus() {
@@ -116,10 +111,15 @@ class Game {
     return { position: this.food.position };
   }
 
+  increaseScoreBy(points) {
+    this.score += points;
+  }
+
   update() {
     if (this.snake.hasEatenFood(this.food.position)) {
       this.food = inItFood();
       this.snake.growBy(1);
+      this.increaseScoreBy(5);
     }
   }
 
