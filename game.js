@@ -9,11 +9,7 @@ class Game {
   }
 
   getSnakeStatus() {
-    return {
-      location: this.snake.location,
-      species: this.snake.species,
-      previousTail: this.snake.previousTail
-    };
+    return this.snake.status;
   }
 
   getFoodStatus() {
@@ -44,7 +40,7 @@ class Game {
   }
 
   turnSnake(directionLookup) {
-    const headDirection = this.snake.headDirection;
+    const headDirection = this.getSnakeStatus().headDirection;
     if (directionLookup[event.key] === (headDirection + 1) % 4) {
       this.snake.turnLeft();
     }

@@ -37,34 +37,34 @@ const createGrids = function() {
   }
 };
 
-const eraseTail = function(snake) {
-  let [colId, rowId] = snake.previousTail;
+const eraseTail = function(snakeStatus) {
+  let [colId, rowId] = snakeStatus.tail;
   const cell = getCell(colId, rowId);
-  cell.classList.remove(snake.species);
+  cell.classList.remove(snakeStatus.species);
 };
 
-const drawSnake = function(snake) {
-  snake.location.forEach(([colId, rowId]) => {
+const drawSnake = function(snakeStatus) {
+  snakeStatus.location.forEach(([colId, rowId]) => {
     const cell = getCell(colId, rowId);
-    cell.classList.add(snake.species);
+    cell.classList.add(snakeStatus.species);
   });
 };
 
-const drawFood = food => {
-  const [rowId, colId] = food.position;
+const drawFood = foodStatus => {
+  const [rowId, colId] = foodStatus.position;
   const cell = getCell(rowId, colId);
   cell.classList.add("food");
 };
 
-const eraseFood = food => {
-  const [rowId, colId] = food.position;
+const eraseFood = foodStatus => {
+  const [rowId, colId] = foodStatus.position;
   const cell = getCell(rowId, colId);
   cell.classList.remove("food");
 };
 
-const moveAndDrawSnake = function(snake) {
-  eraseTail(snake);
-  drawSnake(snake);
+const moveAndDrawSnake = function(snakeStatus) {
+  eraseTail(snakeStatus);
+  drawSnake(snakeStatus);
 };
 
 const drawScore = score => {

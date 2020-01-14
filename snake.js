@@ -8,20 +8,17 @@ class Snake {
     this.previousTail = [0, 0];
   }
 
-  get location() {
-    return this.positions.slice();
-  }
-
-  get species() {
-    return this.type;
-  }
-
-  get headDirection() {
-    return this.direction.heading;
-  }
-
   get head() {
     return this.positions[this.positions.length - 1].slice();
+  }
+
+  get status() {
+    return {
+      location: this.positions.slice(),
+      species: this.type,
+      headDirection: this.direction.heading,
+      tail: this.previousTail.slice()
+    };
   }
 
   hasEatenFood(foodLocation) {
@@ -31,7 +28,7 @@ class Snake {
   }
 
   hasTouchedItself() {
-    const body = this.location.slice(0, -1);
+    const body = this.status.location.slice(0, -1);
     const snakeHead = this.head;
     return body.some(part => areCellsEqual(part, snakeHead));
   }
@@ -56,7 +53,6 @@ class Snake {
     this.previousTail = this.positions.shift();
 
     const [deltaX, deltaY] = this.direction.delta;
-
     this.positions.push([headX + deltaX, headY + deltaY]);
   }
 
