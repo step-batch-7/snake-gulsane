@@ -50,21 +50,21 @@ const drawSnake = function(snakeStatus) {
   });
 };
 
+const moveAndDrawSnake = function(snakeStatus) {
+  eraseTail(snakeStatus);
+  drawSnake(snakeStatus);
+};
+
 const drawFood = foodStatus => {
   const [rowId, colId] = foodStatus.position;
   const cell = getCell(rowId, colId);
-  cell.classList.add("food");
+  cell.classList.add(foodStatus.type);
 };
 
 const eraseFood = foodStatus => {
   const [rowId, colId] = foodStatus.position;
   const cell = getCell(rowId, colId);
-  cell.classList.remove("food");
-};
-
-const moveAndDrawSnake = function(snakeStatus) {
-  eraseTail(snakeStatus);
-  drawSnake(snakeStatus);
+  cell.classList.remove(foodStatus.type);
 };
 
 const drawScore = score => {
@@ -105,25 +105,25 @@ const setGame = game => {
   updateGame(game);
 };
 
-const inItSnake = () => {
+const inItSnake = type => {
   const snakePosition = [
     [40, 25],
     [41, 25],
     [42, 25],
     [43, 25]
   ];
-  return new Snake(snakePosition, new Direction(EAST), "snake");
+  return new Snake(snakePosition, new Direction(EAST), type);
 };
 
-const inItFood = () => {
+const inItFood = type => {
   const rowId = Math.floor(Math.random() * 100);
   const colId = Math.floor(Math.random() * 60);
-  return new Food(rowId, colId);
+  return new Food(rowId, colId, type);
 };
 
 const main = function() {
-  const snake = inItSnake();
-  const food = inItFood();
+  const snake = inItSnake("snake");
+  const food = inItFood("simpleFood");
   const game = new Game(snake, food, [
     [0, NUM_OF_COLS],
     [0, NUM_OF_ROWS]

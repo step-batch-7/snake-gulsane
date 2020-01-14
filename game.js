@@ -13,7 +13,7 @@ class Game {
   }
 
   getFoodStatus() {
-    return { position: this.food.position };
+    return this.food.status;
   }
 
   get getGameScore() {
@@ -21,8 +21,8 @@ class Game {
   }
 
   update() {
-    if (this.snake.hasEatenFood(this.food.position)) {
-      this.food = inItFood();
+    if (this.snake.hasEatenFood(this.getFoodStatus().position)) {
+      this.food = inItFood("simpleFood");
       this.snake.growBy(1);
       this.score.updateDefault();
     }
