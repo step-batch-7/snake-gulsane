@@ -32,6 +32,10 @@ const areCellsEqual = (cell1, cell2) => {
   return cell1RowId === cell2RowId && Cell1ColId === cell2ColId;
 };
 
+const isNotInRange = function(value, [min, max]) {
+  return value < min || value >= max;
+};
+
 class Snake {
   constructor(positions, direction, type) {
     this.positions = positions.slice();
@@ -66,6 +70,13 @@ class Snake {
     const body = this.location.slice(0, -1);
     const snakeHead = this.head;
     return body.some(part => areCellsEqual(part, snakeHead));
+  }
+
+  hasTouchedBoundary([width, height]) {
+    const [headX, headY] = this.head;
+    const hasTouchedSides = isNotInRange(headX, width);
+    const hasTouchedTopBottom = isNotInRange(headY, height);
+    return hasTouchedSides || hasTouchedTopBottom;
   }
 
   growBy(length) {
@@ -105,10 +116,11 @@ class Food {
 }
 
 class Game {
-  constructor(snake, food) {
+  constructor(snake, food, boundarySize) {
     this.snake = snake;
     this.food = food;
     this.score = 0;
+    this.boundarySize = boundarySize;
   }
 
   getSnakeStatus() {
@@ -140,7 +152,10 @@ class Game {
   }
 
   hasGameOver() {
-    return this.snake.hasTouchedItself();
+    return (
+      this.snake.hasTouchedItself() ||
+      this.snake.hasTouchedBoundary(this.boundarySize)
+    );
   }
 
   turnSnake(directionLookup) {
@@ -273,7 +288,10 @@ const inItFood = () => {
 const main = function() {
   const snake = inItSnake();
   const food = inItFood();
-  const game = new Game(snake, food);
+  const game = new Game(snake, food, [
+    [0, NUM_OF_COLS],
+    [0, NUM_OF_ROWS]
+  ]);
   setGame(game);
   const gameLoop = setInterval(() => {
     updateGame(game, gameLoop);
