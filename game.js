@@ -4,8 +4,8 @@ class Game {
   constructor(snake, food, boundarySize) {
     this.snake = snake;
     this.food = food;
-    this.score = 0;
     this.boundarySize = boundarySize;
+    this.score = new Score();
   }
 
   getSnakeStatus() {
@@ -17,18 +17,14 @@ class Game {
   }
 
   get getGameScore() {
-    return this.score;
-  }
-
-  increaseScoreBy(points) {
-    this.score += points;
+    return this.score.status;
   }
 
   update() {
     if (this.snake.hasEatenFood(this.food.position)) {
       this.food = inItFood();
       this.snake.growBy(1);
-      this.increaseScoreBy(5);
+      this.score.updateDefault();
     }
   }
 
