@@ -90,13 +90,14 @@ const updateGame = (game, gameLoop) => {
   if (game.hasGameOver()) {
     clearInterval(gameLoop);
     alert("Game is Over");
+  } else {
+    eraseFood(game.getFoodStatus());
+    drawScore(game.getGameScore);
+    game.update();
+    moveAndDrawSnake(game.getSnakeStatus());
+    drawFood(game.getFoodStatus());
+    game.move();
   }
-  eraseFood(game.getFoodStatus());
-  drawScore(game.getGameScore);
-  game.update();
-  moveAndDrawSnake(game.getSnakeStatus());
-  drawFood(game.getFoodStatus());
-  game.move();
 };
 
 const setGame = game => {
@@ -115,15 +116,15 @@ const inItSnake = type => {
   return new Snake(snakePosition, new Direction(EAST), type);
 };
 
-const inItFood = type => {
+const inItFood = property => {
   const rowId = Math.floor(Math.random() * 100);
   const colId = Math.floor(Math.random() * 60);
-  return new Food(rowId, colId, type);
+  return new Food(rowId, colId, property);
 };
 
 const main = function() {
   const snake = inItSnake("snake");
-  const food = inItFood("simpleFood");
+  const food = inItFood(foodPropertyLookUp.simpleFood);
   const game = new Game(snake, food, [
     [0, NUM_OF_COLS],
     [0, NUM_OF_ROWS]

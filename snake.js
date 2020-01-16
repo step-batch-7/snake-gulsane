@@ -1,6 +1,10 @@
 "use Strict";
 
 class Snake {
+  positions;
+  direction;
+  type;
+  previousTail;
   constructor(positions, direction, type) {
     this.positions = positions.slice();
     this.direction = direction;

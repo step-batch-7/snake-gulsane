@@ -6,6 +6,8 @@ const WEST = 2;
 const SOUTH = 3;
 
 class Direction {
+  heading;
+  deltas;
   constructor(initialHeading) {
     this.heading = initialHeading;
     this.deltas = {};

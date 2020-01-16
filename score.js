@@ -8,10 +8,7 @@ class Score {
   get status() {
     return this.score;
   }
-  updateDefault() {
-    this.score += 5;
-  }
-  updateSuper() {
-    this.score += 20;
+  update(points) {
+    this.score += points;
   }
 }
